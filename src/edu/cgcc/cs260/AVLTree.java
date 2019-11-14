@@ -26,15 +26,15 @@ public class AVLTree {
 			return;
 		}
 		
+		//don't insert duplicate key
+		//demonstration of exception handling
+		if(rt.key == key)
+			throw new Exception("Person " + key + " already exists.");
+		
 		//otherwise, insert node in appropriate position
 		//infinite loop to keep going until 
 		//correct position is found and returned
 		while(true) {
-			//don't insert duplicate key
-			//demonstration of exception handling
-			if(rt.key == key)
-				throw new Exception("Person " + key + " already exists.");
-			
 			//set the parent to current rt
 			AVLNode parent = rt;
 			
@@ -52,15 +52,14 @@ public class AVLTree {
 				else
 					parent.right = new AVLNode(key, parent);
 				
-				//rebalance the tree
+				//re-balance the tree
 				rebalance(parent);
 				
 				//quit the loop
 				break;
 			}
 		}
-		
-		//return success of node creation and insertion
+
 		return;
 	}
 	
@@ -116,15 +115,14 @@ public class AVLTree {
 		//set the balance of the node
 		setBalance(rt, null);
 
-		
-		if(rt.balance <= -2) {
+		if(rt.balance < -1) {
 			if(height(rt.left.left) >= height(rt.right.right))
 				rt = rotateRight(rt);
 			else
 				rt = rotateLeftThenRight(rt);
 		}
 		
-		else if(rt.balance >= 2) {
+		else if(rt.balance > 1) {
 			if (height(rt.right.right) >= height(rt.right.left))
                 rt = rotateLeft(rt);
             else
@@ -141,33 +139,46 @@ public class AVLTree {
 	
 	/**
 	 * rotate tree to the left for balance
-	 * @param a
+	 * @param rotNode
 	 * @return
 	 */
-	private AVLNode rotateLeft(AVLNode a) {
-		 
-        AVLNode b = a.right;
-        b.parent = a.parent;
+	private AVLNode rotateLeft(AVLNode rotNode) {
+		
+		//get right child of rotation node
+        AVLNode rightChild = rotNode.right;
+        
+        //rotate right child left by changing right child's parent
+        //to the rotation node's parent
+        rightChild.parent = rotNode.parent;
  
-        a.right = b.left;
+        //rotate the right child's, left child to the left
+        //by rotating to the rotation node's right child
+        rotNode.right = rightChild.left;
  
-        if (a.right != null)
-            a.right.parent = a;
+        //if the rotation node's right child isn't null,
+        //the new right child's parent gets set to rotation node
+        if (rotNode.right != null)
+            rotNode.right.parent = rotNode;
+        
+        //move the rotation node to right child's left
+        rightChild.left = rotNode;
+        
+        //set the rotation node's parent to its right child
+        rotNode.parent = rightChild;
  
-        b.left = a;
-        a.parent = b;
- 
-        if (b.parent != null) {
-            if (b.parent.right == a) {
-                b.parent.right = b;
+        //if right child's parent isn't null more rotation occurs
+        if (rightChild.parent != null) {
+        	//
+            if (rightChild.parent.right == rotNode) {
+                rightChild.parent.right = rightChild;
             } else {
-                b.parent.left = b;
+                rightChild.parent.left = rightChild;
             }
         }
  
-        setBalance(a, b);
+        setBalance(rotNode, rightChild);
  
-        return b;
+        return rightChild;
     }
  
 	/**
@@ -226,11 +237,15 @@ public class AVLTree {
      * @param a
      * @param b
      */
-    private void setBalance(AVLNode a, AVLNode b) {    	
+    private void setBalance(AVLNode a, AVLNode b) {    
+    	
     	for (AVLNode n : new AVLNode[] {a, b}) {
-            reHeight(n);
-            n.balance = height(n.right) - height(n.left);
+    		if(n != null) {
+	            reHeight(n);
+	            n.balance = height(n.right) - height(n.left);
+    		}
         }
+    	
     }
     
     /**
@@ -241,6 +256,7 @@ public class AVLTree {
     private int height(AVLNode n) {
         if (n == null)
             return -1;
+        
         return n.height;
     }
     
@@ -400,6 +416,6 @@ public class AVLTree {
 	}
 	
 	public void printBalance() {
-		printNodeBalances(root);
+		printNodeBalance(root);
 	}
 }

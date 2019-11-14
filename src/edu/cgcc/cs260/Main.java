@@ -5,21 +5,26 @@ public class Main {
 	public static void main(String[] args) {
 		AVLTree avl = new AVLTree();
 		//create tree
-		for(int i = 1; i <= 10; i++) {
+		for(int i = 1; i < 10; i++) {
 			avl.insert(i);
 		}
-		avl.preOrder();
+		//avl.preOrder();
+		System.out.println();
+		avl.printBalance();
 		
-		//duplicate insert
-		System.out.println();
-		avl.insert(1);
-		System.out.println();
-		
-		//delete person
-		System.out.println();
-		avl.delete(1);
-		System.out.println();
-		avl.preOrder();
+//		//duplicate insert
+//		System.out.println();
+//		avl.insert(1);
+//		System.out.println();
+//		
+//		//delete person
+//		System.out.println();
+//		avl.delete(1);
+//		System.out.println();
+//		avl.preOrder();
+//		System.out.println();
+//		
+//		
 	}
 	
 }
