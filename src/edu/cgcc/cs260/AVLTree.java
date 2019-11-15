@@ -163,12 +163,12 @@ public class AVLTree {
         //move the rotation node to right child's left
         rightChild.left = rotNode;
         
-        //set the rotation node's parent to its right child
+        //set the rotation node's new parent to its right child
         rotNode.parent = rightChild;
  
-        //if right child's parent isn't null more rotation occurs
+        //if right child's parent isn't null do housekeeping
         if (rightChild.parent != null) {
-        	//
+        	
             if (rightChild.parent.right == rotNode) {
                 rightChild.parent.right = rightChild;
             } else {
@@ -183,33 +183,33 @@ public class AVLTree {
  
 	/**
 	 * rotate tree to the right for balance
-	 * @param a
+	 * @param rotNode
 	 * @return
 	 */
-    private AVLNode rotateRight(AVLNode a) {
+    private AVLNode rotateRight(AVLNode rotNode) {
  
-        AVLNode b = a.left;
-        b.parent = a.parent;
+        AVLNode leftChild = rotNode.left;
+        leftChild.parent = rotNode.parent;
  
-        a.left = b.right;
+        rotNode.left = leftChild.right;
  
-        if (a.left != null)
-            a.left.parent = a;
+        if (rotNode.left != null)
+            rotNode.left.parent = rotNode;
  
-        b.right = a;
-        a.parent = b;
+        leftChild.right = rotNode;
+        rotNode.parent = leftChild;
  
-        if (b.parent != null) {
-            if (b.parent.right == a) {
-                b.parent.right = b;
+        if (leftChild.parent != null) {
+            if (leftChild.parent.right == rotNode) {
+                leftChild.parent.right = leftChild;
             } else {
-                b.parent.left = b;
+                leftChild.parent.left = leftChild;
             }
         }
  
-        setBalance(a, b);
+        setBalance(rotNode, leftChild);
  
-        return b;
+        return leftChild;
     }
  
     /**
