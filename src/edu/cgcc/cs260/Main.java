@@ -3,11 +3,13 @@ package edu.cgcc.cs260;
 public class Main {
 
 	public static void main(String[] args) {
-		int[] iArr = new int[] {10,8,15,7,9,12,17,16,18,6,4};
+		int[] iArr = new int[] {10,8,7,9,15,12,17,16,18}; //add (Left-Left): 6,4; b < a < c
+		int[] iArr1 = new int[] {10,8,7,9,15,14,17};//add (Right-Right): 18,19; c < a < b
+		int[] iArr2 = new int[] {10,7,4,9,15,14,16,2,3}; //add (Left-Right): 2, 3; a < b < c
 		AVLTree avl = new AVLTree();
 		//create tree
-		for(int i = 0; i < iArr.length; i++) {
-			avl.insert(iArr[i]);
+		for(int i = 0; i < iArr2.length; i++) {
+			avl.insert(iArr2[i]);
 		}
 		//avl.preOrder();
 		System.out.println("Pre Order w/ Balance Factor:");
@@ -16,8 +18,6 @@ public class Main {
 		avl.printBalancePreOrder();
 		
 		System.out.println();
-		avl.delete(6);
-		avl.delete(4);
 		System.out.println("Pre Order w/ Balance Factor:");
 		avl.preOrder();
 		System.out.println();
