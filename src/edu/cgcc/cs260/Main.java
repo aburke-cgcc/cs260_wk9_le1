@@ -3,14 +3,25 @@ package edu.cgcc.cs260;
 public class Main {
 
 	public static void main(String[] args) {
+		int[] iArr = new int[] {10,8,15,7,9,12,17,16,18,6,4};
 		AVLTree avl = new AVLTree();
 		//create tree
-		for(int i = 1; i < 10; i++) {
-			avl.insert(i);
+		for(int i = 0; i < iArr.length; i++) {
+			avl.insert(iArr[i]);
 		}
 		//avl.preOrder();
+		System.out.println("Pre Order w/ Balance Factor:");
+		avl.preOrder();
 		System.out.println();
-		avl.printBalance();
+		avl.printBalancePreOrder();
+		
+		System.out.println();
+		avl.delete(6);
+		avl.delete(4);
+		System.out.println("Pre Order w/ Balance Factor:");
+		avl.preOrder();
+		System.out.println();
+		avl.printBalancePreOrder();
 		
 //		//duplicate insert
 //		System.out.println();

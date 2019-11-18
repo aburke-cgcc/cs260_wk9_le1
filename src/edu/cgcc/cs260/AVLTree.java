@@ -116,13 +116,13 @@ public class AVLTree {
 		setBalance(rt, null);
 
 		if(rt.balance < -1) {
-			if(height(rt.left.left) >= height(rt.right.right))
+			if(height(rt.left.left) >= height(rt.left.right))
 				rt = rotateRight(rt);
 			else
 				rt = rotateLeftThenRight(rt);
 		}
 		
-		else if(rt.balance > 1) {
+		if(rt.balance > 1) {
 			if (height(rt.right.right) >= height(rt.right.left))
                 rt = rotateLeft(rt);
             else
@@ -139,77 +139,77 @@ public class AVLTree {
 	
 	/**
 	 * rotate tree to the left for balance
-	 * @param rotNode
+	 * @param oldRT
 	 * @return
 	 */
-	private AVLNode rotateLeft(AVLNode rotNode) {
+	private AVLNode rotateLeft(AVLNode oldRT) {
 		
 		//get right child of rotation node
-        AVLNode rightChild = rotNode.right;
+        AVLNode newRT = oldRT.right;
         
         //rotate right child left by changing right child's parent
         //to the rotation node's parent
-        rightChild.parent = rotNode.parent;
+        newRT.parent = oldRT.parent;
  
         //rotate the right child's, left child to the left
         //by rotating to the rotation node's right child
-        rotNode.right = rightChild.left;
+        oldRT.right = newRT.left;
  
         //if the rotation node's right child isn't null,
         //the new right child's parent gets set to rotation node
-        if (rotNode.right != null)
-            rotNode.right.parent = rotNode;
+        if (oldRT.right != null)
+            oldRT.right.parent = oldRT;
         
         //move the rotation node to right child's left
-        rightChild.left = rotNode;
+        newRT.left = oldRT;
         
         //set the rotation node's new parent to its right child
-        rotNode.parent = rightChild;
+        oldRT.parent = newRT;
  
         //if right child's parent isn't null do housekeeping
-        if (rightChild.parent != null) {
+        if (newRT.parent != null) {
         	
-            if (rightChild.parent.right == rotNode) {
-                rightChild.parent.right = rightChild;
+            if (newRT.parent.right == oldRT) {
+                newRT.parent.right = newRT;
             } else {
-                rightChild.parent.left = rightChild;
+                newRT.parent.left = newRT;
             }
         }
  
-        setBalance(rotNode, rightChild);
+        setBalance(oldRT, newRT);
  
-        return rightChild;
+        return newRT;
     }
  
 	/**
 	 * rotate tree to the right for balance
-	 * @param rotNode
+	 * @param oldRT
 	 * @return
 	 */
-    private AVLNode rotateRight(AVLNode rotNode) {
+    private AVLNode rotateRight(AVLNode oldRT) {
  
-        AVLNode leftChild = rotNode.left;
-        leftChild.parent = rotNode.parent;
+        AVLNode newRT = oldRT.left;
+        newRT.parent = oldRT.parent;
  
-        rotNode.left = leftChild.right;
+        oldRT.left = newRT.right;
  
-        if (rotNode.left != null)
-            rotNode.left.parent = rotNode;
+        if (oldRT.left != null)
+            oldRT.left.parent = oldRT;
  
-        leftChild.right = rotNode;
-        rotNode.parent = leftChild;
+        newRT.right = oldRT;
+        oldRT.parent = newRT;
  
-        if (leftChild.parent != null) {
-            if (leftChild.parent.right == rotNode) {
-                leftChild.parent.right = leftChild;
+        if (newRT.parent != null) {
+            if (newRT.parent.right == oldRT) {
+                newRT.parent.right = newRT;
             } else {
-                leftChild.parent.left = leftChild;
+                newRT.parent.left = newRT;
             }
         }
  
-        setBalance(rotNode, leftChild);
+        setBalance(oldRT, newRT);
  
-        return leftChild;
+        return newRT;
     }
  
     /**
@@ -277,12 +277,15 @@ public class AVLTree {
 	private void printData(AVLNode rt) {
 		System.out.print("(" + rt.key + ")" + rt.getData().getName() + " ");
 	}
+	private void printKey(AVLNode rt) {
+		System.out.print("(" + rt.key + ")"+rt.balance+"\t");
+	}
 	
 	/**
 	 * recursively print nodes to console in pre-order traversal
 	 * @param rt
 	 */
-	private void printPreOrder(AVLNode rt) {
+	private void printPreOrder(AVLNode rt, boolean printKeyOnly) {
 		
 		//base case: if node is null, return
 		if(rt == null) {
@@ -290,9 +293,12 @@ public class AVLTree {
 		}
 		
 		//print pre order
-		printData(rt);
-		printPreOrder(rt.left);
-		printPreOrder(rt.right);
+		if (printKeyOnly) 
+			printKey(rt); 
+		else
+			printData(rt);
+		printPreOrder(rt.left, printKeyOnly);
+		printPreOrder(rt.right, printKeyOnly);
 	}
 	
 	/**
@@ -329,12 +335,13 @@ public class AVLTree {
 		printData(rt);
 	}
 	
-	private void printNodeBalance(AVLNode n) {
-        if (n != null) {
-            printNodeBalance(n.left);
-            System.out.printf("%s ", n.balance);
-            printNodeBalance(n.right);
-        }
+	private void printNodeBalancePreOrder(AVLNode n) {
+        if(n == null)
+        	return;
+		
+    	System.out.printf("%s\t", n.balance);
+    	printNodeBalancePreOrder(n.left);
+    	printNodeBalancePreOrder(n.right);
     }
 	
 	//
@@ -398,7 +405,7 @@ public class AVLTree {
 	 * print the tree in pre-order traversal
 	 */
 	public void preOrder() {
-		printPreOrder(root);
+		printPreOrder(root, true);
 	}
 	
 	/**
@@ -415,7 +422,7 @@ public class AVLTree {
 		printPostOrder(root);
 	}
 	
-	public void printBalance() {
-		printNodeBalance(root);
+	public void printBalancePreOrder() {
+		printNodeBalancePreOrder(root);
 	}
 }
